@@ -32,7 +32,7 @@ El objetivo del trabajo es construir un sistema de análisis y visualización so
 
 ## Avance por hitos
 
-- [ ] Hito 1 — Adquisición y planteo
+- [x] Hito 1 — Adquisición y planteo
 - [ ] Hito 2 — ETL y feature engineering
 - [ ] Hito 3 — Visualizaciones
 - [ ] Hito 4 — Dashboard interactivo (Streamlit)
