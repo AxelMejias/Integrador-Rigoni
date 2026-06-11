@@ -36,7 +36,7 @@ El objetivo del trabajo es construir un sistema de análisis y visualización so
 - [x] Hito 2 — ETL y feature engineering
 - [x] Hito 3 — Visualizaciones
 - [x] Hito 4 — Dashboard interactivo (Grafana + SQLite)
-- [ ] Hito 5 — Informe de gestión
+- [x] Hito 5 — Informe de gestión
 
 ## Organización de ramas
 
