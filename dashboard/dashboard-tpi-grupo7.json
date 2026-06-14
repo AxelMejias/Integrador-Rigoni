@@ -1,0 +1,332 @@
+{
+  "annotations": { "list": [] },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "links": [],
+  "schemaVersion": 38,
+  "tags": ["tpi", "academico", "grupo7", "tup"],
+  "timezone": "America/Argentina/Buenos_Aires",
+  "time": { "from": "now-1h", "to": "now" },
+  "timepicker": { "hidden": true },
+  "title": "TPI — Análisis Académico TUP | Bontorno, Mas, Vernier, Mejias, Hassan, Nuñez",
+  "uid": "tpi-grupo7-academico",
+  "version": 1,
+  "weekStart": "",
+  "templating": {
+    "list": [
+      {
+        "name": "Turno",
+        "label": "Turno",
+        "type": "query",
+        "datasource": { "type": "frser-sqlite-datasource", "uid": "${DS_SQLITE}" },
+        "query": "SELECT DISTINCT Turno FROM alumnos ORDER BY Turno",
+        "refresh": 1,
+        "includeAll": true,
+        "multi": true,
+        "current": { "selected": true, "text": "All", "value": "$__all" },
+        "sort": 1,
+        "skipUrlSync": false
+      },
+      {
+        "name": "Comision",
+        "label": "Comisión",
+        "type": "query",
+        "datasource": { "type": "frser-sqlite-datasource", "uid": "${DS_SQLITE}" },
+        "query": "SELECT DISTINCT Comision FROM alumnos ORDER BY Comision",
+        "refresh": 1,
+        "includeAll": true,
+        "multi": true,
+        "current": { "selected": true, "text": "All", "value": "$__all" },
+        "sort": 1,
+        "skipUrlSync": false
+      }
+    ]
+  },
+  "panels": [
+    {
+      "id": 1,
+      "type": "stat",
+      "title": "Tasa de Presentación al Parcial",
+      "description": "% de alumnos que se presentaron al parcial (Estado ≠ Ausente). Responde a los filtros de Turno y Comisión.",
+      "gridPos": { "h": 4, "w": 6, "x": 0, "y": 0 },
+      "datasource": { "type": "frser-sqlite-datasource", "uid": "${DS_SQLITE}" },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": { "type": "frser-sqlite-datasource", "uid": "${DS_SQLITE}" },
+          "queryType": "table",
+          "rawQueryText": "SELECT ROUND(100.0 * SUM(CASE WHEN Estado_Final != 'Ausente' THEN 1 ELSE 0 END) / COUNT(*), 1) AS \"Tasa\" FROM alumnos WHERE Turno IN (${Turno:singlequote}) AND Comision IN (${Comision:singlequote})",
+          "queryText": "SELECT ROUND(100.0 * SUM(CASE WHEN Estado_Final != 'Ausente' THEN 1 ELSE 0 END) / COUNT(*), 1) AS \"Tasa\" FROM alumnos WHERE Turno IN (${Turno:singlequote}) AND Comision IN (${Comision:singlequote})",
+          "timeColumns": []
+        }
+      ],
+      "options": {
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "orientation": "auto", "textMode": "auto", "colorMode": "background",
+        "graphMode": "none", "justifyMode": "auto"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "thresholds": { "mode": "absolute", "steps": [
+            { "color": "red", "value": null },
+            { "color": "yellow", "value": 50 },
+            { "color": "green", "value": 65 }
+          ]},
+          "unit": "percent", "mappings": [], "min": 0, "max": 100
+        },
+        "overrides": []
+      }
+    },
+    {
+      "id": 2,
+      "type": "stat",
+      "title": "Alumnos Aprobados",
+      "description": "Total de alumnos con estado final Aprobado (nota parcial ≥ 6). Responde a los filtros.",
+      "gridPos": { "h": 4, "w": 6, "x": 6, "y": 0 },
+      "datasource": { "type": "frser-sqlite-datasource", "uid": "${DS_SQLITE}" },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": { "type": "frser-sqlite-datasource", "uid": "${DS_SQLITE}" },
+          "queryType": "table",
+          "rawQueryText": "SELECT COUNT(*) AS \"Aprobados\" FROM alumnos WHERE Estado_Final = 'Aprobado' AND Turno IN (${Turno:singlequote}) AND Comision IN (${Comision:singlequote})",
+          "queryText": "SELECT COUNT(*) AS \"Aprobados\" FROM alumnos WHERE Estado_Final = 'Aprobado' AND Turno IN (${Turno:singlequote}) AND Comision IN (${Comision:singlequote})",
+          "timeColumns": []
+        }
+      ],
+      "options": {
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "orientation": "auto", "textMode": "auto", "colorMode": "background",
+        "graphMode": "none", "justifyMode": "auto"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "fixed", "fixedColor": "green" },
+          "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }] },
+          "unit": "short", "mappings": []
+        },
+        "overrides": []
+      }
+    },
+    {
+      "id": 7,
+      "type": "stat",
+      "title": "Alumnos en Riesgo (Constancia < 43%)",
+      "description": "Alumnos cuyo Índice de Constancia está por debajo del umbral de alerta temprana de abandono (43%).",
+      "gridPos": { "h": 4, "w": 6, "x": 0, "y": 4 },
+      "datasource": { "type": "frser-sqlite-datasource", "uid": "${DS_SQLITE}" },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": { "type": "frser-sqlite-datasource", "uid": "${DS_SQLITE}" },
+          "queryType": "table",
+          "rawQueryText": "SELECT COUNT(*) AS \"En Riesgo\" FROM alumnos WHERE Indice_Constancia < 43 AND Turno IN (${Turno:singlequote}) AND Comision IN (${Comision:singlequote})",
+          "queryText": "SELECT COUNT(*) AS \"En Riesgo\" FROM alumnos WHERE Indice_Constancia < 43 AND Turno IN (${Turno:singlequote}) AND Comision IN (${Comision:singlequote})",
+          "timeColumns": []
+        }
+      ],
+      "options": {
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "orientation": "auto", "textMode": "auto", "colorMode": "background",
+        "graphMode": "none", "justifyMode": "auto"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "fixed", "fixedColor": "orange" },
+          "thresholds": { "mode": "absolute", "steps": [{ "color": "orange", "value": null }] },
+          "unit": "short", "mappings": []
+        },
+        "overrides": []
+      }
+    },
+    {
+      "id": 8,
+      "type": "stat",
+      "title": "Total Alumnos (filtrados)",
+      "description": "Cantidad de alumnos que cumplen los filtros activos. Base total: 700.",
+      "gridPos": { "h": 4, "w": 6, "x": 6, "y": 4 },
+      "datasource": { "type": "frser-sqlite-datasource", "uid": "${DS_SQLITE}" },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": { "type": "frser-sqlite-datasource", "uid": "${DS_SQLITE}" },
+          "queryType": "table",
+          "rawQueryText": "SELECT COUNT(*) AS \"Total\" FROM alumnos WHERE Turno IN (${Turno:singlequote}) AND Comision IN (${Comision:singlequote})",
+          "queryText": "SELECT COUNT(*) AS \"Total\" FROM alumnos WHERE Turno IN (${Turno:singlequote}) AND Comision IN (${Comision:singlequote})",
+          "timeColumns": []
+        }
+      ],
+      "options": {
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "orientation": "auto", "textMode": "auto", "colorMode": "background",
+        "graphMode": "none", "justifyMode": "auto"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "fixed", "fixedColor": "blue" },
+          "thresholds": { "mode": "absolute", "steps": [{ "color": "blue", "value": null }] },
+          "unit": "short", "mappings": []
+        },
+        "overrides": []
+      }
+    },
+    {
+      "id": 3,
+      "type": "piechart",
+      "title": "Distribución de Estados Finales",
+      "description": "Aprobado / Recupera / Desaprobado / Ausente. Responde a los filtros de Turno y Comisión.",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
+      "datasource": { "type": "frser-sqlite-datasource", "uid": "${DS_SQLITE}" },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": { "type": "frser-sqlite-datasource", "uid": "${DS_SQLITE}" },
+          "queryType": "table",
+          "rawQueryText": "SELECT Estado_Final AS \"Estado\", COUNT(*) AS \"Cantidad\" FROM alumnos WHERE Turno IN (${Turno:singlequote}) AND Comision IN (${Comision:singlequote}) GROUP BY Estado_Final ORDER BY Cantidad DESC",
+          "queryText": "SELECT Estado_Final AS \"Estado\", COUNT(*) AS \"Cantidad\" FROM alumnos WHERE Turno IN (${Turno:singlequote}) AND Comision IN (${Comision:singlequote}) GROUP BY Estado_Final ORDER BY Cantidad DESC",
+          "timeColumns": []
+        }
+      ],
+      "options": {
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": true },
+        "pieType": "pie",
+        "legend": { "displayMode": "table", "placement": "right", "showLegend": true, "values": ["value", "percent"] },
+        "tooltip": { "mode": "single", "sort": "none" }
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": { "hideFrom": { "legend": false, "tooltip": false, "viz": false } },
+          "mappings": [], "unit": "short"
+        },
+        "overrides": [
+          { "matcher": { "id": "byName", "options": "Aprobado" }, "properties": [{ "id": "color", "value": { "fixedColor": "#27ae60", "mode": "fixed" } }] },
+          { "matcher": { "id": "byName", "options": "Recupera" }, "properties": [{ "id": "color", "value": { "fixedColor": "#f39c12", "mode": "fixed" } }] },
+          { "matcher": { "id": "byName", "options": "Desaprobado" }, "properties": [{ "id": "color", "value": { "fixedColor": "#e74c3c", "mode": "fixed" } }] },
+          { "matcher": { "id": "byName", "options": "Ausente" }, "properties": [{ "id": "color", "value": { "fixedColor": "#95a5a6", "mode": "fixed" } }] }
+        ]
+      }
+    },
+    {
+      "id": 4,
+      "type": "barchart",
+      "title": "Nota Promedio del Parcial por Comisión",
+      "description": "Comparativa entre comisiones. Umbral de aprobación = 6. Responde a los filtros.",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 8 },
+      "datasource": { "type": "frser-sqlite-datasource", "uid": "${DS_SQLITE}" },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": { "type": "frser-sqlite-datasource", "uid": "${DS_SQLITE}" },
+          "queryType": "table",
+          "rawQueryText": "SELECT Comision AS \"Comisión\", ROUND(AVG(Nota_Parcial), 2) AS \"Nota Promedio\" FROM alumnos WHERE Nota_Parcial IS NOT NULL AND Turno IN (${Turno:singlequote}) AND Comision IN (${Comision:singlequote}) GROUP BY Comision ORDER BY Comision",
+          "queryText": "SELECT Comision AS \"Comisión\", ROUND(AVG(Nota_Parcial), 2) AS \"Nota Promedio\" FROM alumnos WHERE Nota_Parcial IS NOT NULL AND Turno IN (${Turno:singlequote}) AND Comision IN (${Comision:singlequote}) GROUP BY Comision ORDER BY Comision",
+          "timeColumns": []
+        }
+      ],
+      "options": {
+        "barWidth": 0.7, "groupWidth": 0.7, "fillOpacity": 80, "gradientMode": "none",
+        "legend": { "displayMode": "list", "placement": "bottom", "showLegend": false },
+        "orientation": "auto", "tooltip": { "mode": "single", "sort": "none" },
+        "showValue": "auto", "stacking": "none"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "custom": { "axisLabel": "Nota promedio (sobre 10)", "fillOpacity": 80,
+            "gradientMode": "none", "hideFrom": { "legend": false, "tooltip": false, "viz": false },
+            "lineWidth": 1, "thresholdsStyle": { "mode": "line" }, "axisPlacement": "auto" },
+          "unit": "short", "min": 0, "max": 10,
+          "thresholds": { "mode": "absolute", "steps": [
+            { "color": "red", "value": null },
+            { "color": "green", "value": 6 }
+          ]}
+        },
+        "overrides": []
+      }
+    },
+    {
+      "id": 5,
+      "type": "barchart",
+      "title": "Índice de Constancia Promedio — Ausentes vs Presentes",
+      "description": "La brecha confirma que la baja constancia predice el abandono. Responde a los filtros.",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 8 },
+      "datasource": { "type": "frser-sqlite-datasource", "uid": "${DS_SQLITE}" },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": { "type": "frser-sqlite-datasource", "uid": "${DS_SQLITE}" },
+          "queryType": "table",
+          "rawQueryText": "SELECT CASE WHEN Estado_Final = 'Ausente' THEN 'Ausente' ELSE 'Presente' END AS \"Grupo\", ROUND(AVG(Indice_Constancia), 1) AS \"Índice de Constancia\" FROM alumnos WHERE Turno IN (${Turno:singlequote}) AND Comision IN (${Comision:singlequote}) GROUP BY Grupo ORDER BY Grupo",
+          "queryText": "SELECT CASE WHEN Estado_Final = 'Ausente' THEN 'Ausente' ELSE 'Presente' END AS \"Grupo\", ROUND(AVG(Indice_Constancia), 1) AS \"Índice de Constancia\" FROM alumnos WHERE Turno IN (${Turno:singlequote}) AND Comision IN (${Comision:singlequote}) GROUP BY Grupo ORDER BY Grupo",
+          "timeColumns": []
+        }
+      ],
+      "options": {
+        "barWidth": 0.6, "groupWidth": 0.7, "fillOpacity": 80, "gradientMode": "none",
+        "legend": { "displayMode": "list", "placement": "bottom", "showLegend": false },
+        "orientation": "auto", "tooltip": { "mode": "single", "sort": "none" },
+        "showValue": "always", "stacking": "none"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": { "axisLabel": "Índice de Constancia (%)", "fillOpacity": 80,
+            "gradientMode": "none", "hideFrom": { "legend": false, "tooltip": false, "viz": false },
+            "lineWidth": 1, "axisPlacement": "auto" },
+          "unit": "percent", "min": 0, "max": 100
+        },
+        "overrides": []
+      }
+    },
+    {
+      "id": 6,
+      "type": "barchart",
+      "title": "Evolución de Nota Promedio y Tasa de Entrega por Actividad",
+      "description": "La tasa de entrega cae del 87% al 60% mientras la nota se mantiene estable: el problema es abandono, no rendimiento.",
+      "gridPos": { "h": 9, "w": 24, "x": 0, "y": 16 },
+      "datasource": { "type": "frser-sqlite-datasource", "uid": "${DS_SQLITE}" },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": { "type": "frser-sqlite-datasource", "uid": "${DS_SQLITE}" },
+          "queryType": "table",
+          "rawQueryText": "SELECT Actividad, ROUND(AVG(Nota), 2) AS \"Nota Promedio\", ROUND(100.0 * AVG(Hizo_Entrega), 1) AS \"Tasa de Entrega (%)\" FROM entregas GROUP BY Actividad ORDER BY MIN(Fecha_Limite)",
+          "queryText": "SELECT Actividad, ROUND(AVG(Nota), 2) AS \"Nota Promedio\", ROUND(100.0 * AVG(Hizo_Entrega), 1) AS \"Tasa de Entrega (%)\" FROM entregas GROUP BY Actividad ORDER BY MIN(Fecha_Limite)",
+          "timeColumns": []
+        }
+      ],
+      "options": {
+        "barWidth": 0.8, "groupWidth": 0.7, "fillOpacity": 80, "gradientMode": "none",
+        "legend": { "displayMode": "list", "placement": "bottom", "showLegend": true },
+        "orientation": "auto", "tooltip": { "mode": "multi", "sort": "none" },
+        "showValue": "auto", "stacking": "none"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": { "axisLabel": "", "fillOpacity": 80, "gradientMode": "none",
+            "hideFrom": { "legend": false, "tooltip": false, "viz": false },
+            "lineWidth": 1, "axisPlacement": "auto" },
+          "unit": "short"
+        },
+        "overrides": [
+          { "matcher": { "id": "byName", "options": "Tasa de Entrega (%)" },
+            "properties": [
+              { "id": "unit", "value": "percent" },
+              { "id": "max", "value": 100 },
+              { "id": "color", "value": { "fixedColor": "#e74c3c", "mode": "fixed" } }
+            ]
+          },
+          { "matcher": { "id": "byName", "options": "Nota Promedio" },
+            "properties": [
+              { "id": "color", "value": { "fixedColor": "#3498db", "mode": "fixed" } }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}
