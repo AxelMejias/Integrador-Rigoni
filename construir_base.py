@@ -28,12 +28,8 @@ RUTA_DB = os.path.join(DIR, "data", "academico.db")
 
 
 def cargar_alumnos(ruta: str) -> pd.DataFrame:
-    """Carga datos_limpios.csv (1 fila por alumno) y normaliza nombres de columna."""
+    """Carga datos_limpios.csv (1 fila por alumno) y selecciona las columnas necesarias."""
     df = pd.read_csv(ruta)
-    # El CSV trae columnas duplicadas (Comision/Comisión, Estado/Estado_Final,
-    # Nota Final/Nota_Parcial). Nos quedamos con una sola versión, sin tildes ni
-    # espacios, para que las queries SQL sean simples.
-    df = df.rename(columns={"Nota Final": "Nota_Final"})
     columnas = [
         "ID_Alumno", "Nombre_Apellido", "Edad", "Genero", "Comision", "Turno",
         "Entregas_Previas", "Entregas_A_Tiempo", "Total_Actividades_Previas",
