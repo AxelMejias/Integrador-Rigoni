@@ -19,5 +19,10 @@ desktop.ini
 .vscode/
 .idea/
 
-# Archivos generados por el ETL (se regeneran corriendo el notebook)
-data/datos_limpios.csv
+# Cachés de Python
+__pycache__/
+
+# Nota Hito 4: a diferencia de hitos anteriores, este hito SÍ versiona los datos
+# (Calificaciones.csv, datos_limpios.csv) y la base academico.db, porque el
+# dashboard de Grafana los necesita para funcionar y para que el evaluador pueda
+# reproducirlo sin correr todo el ETL.
