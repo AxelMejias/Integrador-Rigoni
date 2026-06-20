@@ -1,0 +1,320 @@
+{
+  "annotations": { "list": [] },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "links": [],
+  "schemaVersion": 38,
+  "tags": ["tpi", "academico", "grupo7", "tup"],
+  "timezone": "America/Argentina/Buenos_Aires",
+  "time": { "from": "now-1h", "to": "now" },
+  "timepicker": { "hidden": true },
+  "title": "TPI — Análisis Académico TUP | Bontorno, Mas, Vernier, Mejias, Hassan, Nuñez",
+  "uid": "tpi-grupo7-infinity",
+  "version": 1,
+  "panels": [
+    {
+      "id": 1,
+      "type": "stat",
+      "title": "Tasa de Presentación al Parcial",
+      "description": "% de alumnos que se presentaron al parcial (Estado ≠ Ausente). Base: 700 alumnos.",
+      "gridPos": { "h": 4, "w": 6, "x": 0, "y": 0 },
+      "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "${DS_INFINITY}" },
+      "targets": [
+        {
+          "refId": "A",
+          "type": "csv",
+          "url": "https://raw.githubusercontent.com/AxelMejias/Integrador-Rigoni/hito-5/data/agg_kpis.csv",
+          "source": "url",
+          "format": "table",
+          "filterExpression": "Metrica == 'Tasa de Presentacion'",
+          "columns": [
+            { "selector": "Valor", "text": "Tasa", "type": "number" }
+          ]
+        }
+      ],
+      "options": {
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "orientation": "auto", "textMode": "auto", "colorMode": "background",
+        "graphMode": "none", "justifyMode": "auto"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "thresholds": { "mode": "absolute", "steps": [
+            { "color": "red", "value": null },
+            { "color": "yellow", "value": 50 },
+            { "color": "green", "value": 65 }
+          ]},
+          "unit": "percent", "min": 0, "max": 100
+        },
+        "overrides": []
+      }
+    },
+    {
+      "id": 2,
+      "type": "stat",
+      "title": "Alumnos Aprobados",
+      "description": "Total de alumnos con estado final Aprobado (nota parcial ≥ 6).",
+      "gridPos": { "h": 4, "w": 6, "x": 6, "y": 0 },
+      "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "${DS_INFINITY}" },
+      "targets": [
+        {
+          "refId": "A",
+          "type": "csv",
+          "url": "https://raw.githubusercontent.com/AxelMejias/Integrador-Rigoni/hito-5/data/agg_kpis.csv",
+          "source": "url",
+          "format": "table",
+          "filterExpression": "Metrica == 'Alumnos Aprobados'",
+          "columns": [
+            { "selector": "Valor", "text": "Aprobados", "type": "number" }
+          ]
+        }
+      ],
+      "options": {
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "orientation": "auto", "textMode": "auto", "colorMode": "background",
+        "graphMode": "none", "justifyMode": "auto"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "fixed", "fixedColor": "green" },
+          "unit": "short"
+        },
+        "overrides": []
+      }
+    },
+    {
+      "id": 7,
+      "type": "stat",
+      "title": "Alumnos en Riesgo (Constancia < 43%)",
+      "description": "Alumnos cuyo Índice de Constancia está por debajo del umbral de alerta temprana de abandono.",
+      "gridPos": { "h": 4, "w": 6, "x": 0, "y": 4 },
+      "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "${DS_INFINITY}" },
+      "targets": [
+        {
+          "refId": "A",
+          "type": "csv",
+          "url": "https://raw.githubusercontent.com/AxelMejias/Integrador-Rigoni/hito-5/data/agg_kpis.csv",
+          "source": "url",
+          "format": "table",
+          "filterExpression": "Metrica == 'Alumnos en Riesgo'",
+          "columns": [
+            { "selector": "Valor", "text": "En Riesgo", "type": "number" }
+          ]
+        }
+      ],
+      "options": {
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "orientation": "auto", "textMode": "auto", "colorMode": "background",
+        "graphMode": "none", "justifyMode": "auto"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "fixed", "fixedColor": "orange" },
+          "unit": "short"
+        },
+        "overrides": []
+      }
+    },
+    {
+      "id": 8,
+      "type": "stat",
+      "title": "Total Alumnos",
+      "description": "Total de alumnos en la cohorte.",
+      "gridPos": { "h": 4, "w": 6, "x": 6, "y": 4 },
+      "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "${DS_INFINITY}" },
+      "targets": [
+        {
+          "refId": "A",
+          "type": "csv",
+          "url": "https://raw.githubusercontent.com/AxelMejias/Integrador-Rigoni/hito-5/data/agg_kpis.csv",
+          "source": "url",
+          "format": "table",
+          "filterExpression": "Metrica == 'Total Alumnos'",
+          "columns": [
+            { "selector": "Valor", "text": "Total", "type": "number" }
+          ]
+        }
+      ],
+      "options": {
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "orientation": "auto", "textMode": "auto", "colorMode": "background",
+        "graphMode": "none", "justifyMode": "auto"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "fixed", "fixedColor": "blue" },
+          "unit": "short"
+        },
+        "overrides": []
+      }
+    },
+    {
+      "id": 3,
+      "type": "piechart",
+      "title": "Distribución de Estados Finales",
+      "description": "Aprobado / Recupera / Desaprobado / Ausente — cohorte completa (700 alumnos).",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
+      "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "${DS_INFINITY}" },
+      "targets": [
+        {
+          "refId": "A",
+          "type": "csv",
+          "url": "https://raw.githubusercontent.com/AxelMejias/Integrador-Rigoni/hito-5/data/agg_estados.csv",
+          "source": "url",
+          "format": "table",
+          "columns": [
+            { "selector": "Estado", "text": "Estado", "type": "string" },
+            { "selector": "Cantidad", "text": "Cantidad", "type": "number" }
+          ]
+        }
+      ],
+      "options": {
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": true },
+        "pieType": "pie",
+        "legend": { "displayMode": "table", "placement": "right", "showLegend": true, "values": ["value", "percent"] },
+        "tooltip": { "mode": "single", "sort": "none" }
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": { "hideFrom": { "legend": false, "tooltip": false, "viz": false } },
+          "unit": "short"
+        },
+        "overrides": [
+          { "matcher": { "id": "byName", "options": "Aprobado" }, "properties": [{ "id": "color", "value": { "fixedColor": "#27ae60", "mode": "fixed" } }] },
+          { "matcher": { "id": "byName", "options": "Recupera" }, "properties": [{ "id": "color", "value": { "fixedColor": "#f39c12", "mode": "fixed" } }] },
+          { "matcher": { "id": "byName", "options": "Desaprobado" }, "properties": [{ "id": "color", "value": { "fixedColor": "#e74c3c", "mode": "fixed" } }] },
+          { "matcher": { "id": "byName", "options": "Ausente" }, "properties": [{ "id": "color", "value": { "fixedColor": "#95a5a6", "mode": "fixed" } }] }
+        ]
+      }
+    },
+    {
+      "id": 4,
+      "type": "barchart",
+      "title": "Nota Promedio del Parcial por Comisión",
+      "description": "Comparativa entre las 9 comisiones. Umbral de aprobación = 6. A1-A3: Mañana, B1-B2: Tarde, C1-C4: Noche.",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 8 },
+      "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "${DS_INFINITY}" },
+      "targets": [
+        {
+          "refId": "A",
+          "type": "csv",
+          "url": "https://raw.githubusercontent.com/AxelMejias/Integrador-Rigoni/hito-5/data/agg_nota_comision.csv",
+          "source": "url",
+          "format": "table",
+          "columns": [
+            { "selector": "Comision", "text": "Comisión", "type": "string" },
+            { "selector": "Nota_Promedio", "text": "Nota Promedio", "type": "number" }
+          ]
+        }
+      ],
+      "options": {
+        "barWidth": 0.7, "fillOpacity": 80, "gradientMode": "none",
+        "legend": { "displayMode": "list", "placement": "bottom", "showLegend": false },
+        "orientation": "auto", "tooltip": { "mode": "single" },
+        "showValue": "auto", "stacking": "none"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "custom": { "axisLabel": "Nota promedio (sobre 10)", "fillOpacity": 80,
+            "hideFrom": { "legend": false, "tooltip": false, "viz": false },
+            "lineWidth": 1, "thresholdsStyle": { "mode": "line" }, "axisPlacement": "auto" },
+          "unit": "short", "min": 0, "max": 10,
+          "thresholds": { "mode": "absolute", "steps": [
+            { "color": "red", "value": null },
+            { "color": "green", "value": 6 }
+          ]}
+        },
+        "overrides": []
+      }
+    },
+    {
+      "id": 5,
+      "type": "barchart",
+      "title": "Índice de Constancia — Ausentes vs Presentes",
+      "description": "Promedio del % de entregas a tiempo. Ausentes: 35.7% vs Presentes: 72.1%. La brecha confirma que la baja constancia predice el abandono.",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 8 },
+      "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "${DS_INFINITY}" },
+      "targets": [
+        {
+          "refId": "A",
+          "type": "csv",
+          "url": "https://raw.githubusercontent.com/AxelMejias/Integrador-Rigoni/hito-5/data/agg_constancia.csv",
+          "source": "url",
+          "format": "table",
+          "columns": [
+            { "selector": "Grupo", "text": "Grupo", "type": "string" },
+            { "selector": "Indice_Constancia", "text": "Índice de Constancia", "type": "number" }
+          ]
+        }
+      ],
+      "options": {
+        "barWidth": 0.6, "fillOpacity": 80, "gradientMode": "none",
+        "legend": { "displayMode": "list", "placement": "bottom", "showLegend": false },
+        "orientation": "auto", "tooltip": { "mode": "single" },
+        "showValue": "always", "stacking": "none"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": { "axisLabel": "Índice de Constancia (%)", "fillOpacity": 80,
+            "hideFrom": { "legend": false, "tooltip": false, "viz": false },
+            "lineWidth": 1, "axisPlacement": "auto" },
+          "unit": "percent", "min": 0, "max": 100
+        },
+        "overrides": []
+      }
+    },
+    {
+      "id": 6,
+      "type": "barchart",
+      "title": "Evolución de Nota Promedio y Tasa de Entrega por Actividad",
+      "description": "La tasa de entrega cae del 87% (TP_01) al 60% (Parcial_01) mientras la nota se mantiene estable: el problema es abandono, no rendimiento.",
+      "gridPos": { "h": 9, "w": 24, "x": 0, "y": 16 },
+      "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "${DS_INFINITY}" },
+      "targets": [
+        {
+          "refId": "A",
+          "type": "csv",
+          "url": "https://raw.githubusercontent.com/AxelMejias/Integrador-Rigoni/hito-5/data/agg_evolucion.csv",
+          "source": "url",
+          "format": "table",
+          "columns": [
+            { "selector": "Actividad", "text": "Actividad", "type": "string" },
+            { "selector": "Nota_Promedio", "text": "Nota Promedio", "type": "number" },
+            { "selector": "Tasa_Entrega", "text": "Tasa de Entrega (%)", "type": "number" }
+          ]
+        }
+      ],
+      "options": {
+        "barWidth": 0.8, "fillOpacity": 80, "gradientMode": "none",
+        "legend": { "displayMode": "list", "placement": "bottom", "showLegend": true },
+        "orientation": "auto", "tooltip": { "mode": "multi" },
+        "showValue": "auto", "stacking": "none"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": { "fillOpacity": 80, "hideFrom": { "legend": false, "tooltip": false, "viz": false }, "lineWidth": 1, "axisPlacement": "auto" },
+          "unit": "short"
+        },
+        "overrides": [
+          { "matcher": { "id": "byName", "options": "Tasa de Entrega (%)" },
+            "properties": [
+              { "id": "unit", "value": "percent" },
+              { "id": "color", "value": { "fixedColor": "#e74c3c", "mode": "fixed" } }
+            ]
+          },
+          { "matcher": { "id": "byName", "options": "Nota Promedio" },
+            "properties": [
+              { "id": "color", "value": { "fixedColor": "#3498db", "mode": "fixed" } }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}
